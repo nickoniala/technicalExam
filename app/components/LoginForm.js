@@ -10,26 +10,80 @@ import {
 } from 'react-native';
 
 export default class LoginForm extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            email: '',
+            validEmail: true,
+            emailHasErrors: false,
+            emailErrorMsg: '',
+        };
+    }
+
+    _checkEmail(email) {
+        let reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        this.setState({email});
+
+        if(email == '') {
+            this.setState({
+                validEmail: false,
+                emailHasErrors: true,
+                emailErrorMsg: 'email is required'
+            });
+        } else if(!reg.test(email)) {
+            this.setState({
+                validEmail: false,
+                emailHasErrors: true,
+                emailErrorMsg: 'not correct format for email address'
+            });
+        } else {
+            this.setState({
+                validEmail: true,
+                emailHasErrors: false,
+                emailErrorMsg: ''
+            });
+        }
+    }
+
+    _onSubmit() {
+        if(this.state.email == '') {
+            this.setState({
+                validEmail: false,
+                emailHasErrors: true,
+                emailErrorMsg: 'email is required'
+            });
+        } else {
+            this.setState({
+                validEmail: true,
+                emailHasErrors: false,
+                emailErrorMsg: ''
+            });
+        }
+    }
+
     render() {
         return (
             <KeyboardAvoidingView style={{flex:1, justifyContent:'space-evenly'}} behavior="padding">
                 <View>
-                    <Image
-                        source={require('../images/logo.png')}
-                    />
+                    <Image source={require('../images/logo.png')} />
                 </View>
                 <View>
-                    <Text style={styles.formLabel}>
+                    <Text style={[styles.formLabel, {marginTop:5}]}>
                         Email
                     </Text>
                     <TextInput
-                        style={[styles.formInput, {marginBottom: 10}]}
+                        style={styles.formInput}
+                        onChangeText={this._checkEmail.bind(this)}
+                        value={this.state.email}
                         placeholder="Input email address"
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
                         autoCorrect={false}
                     />
-                    <Text style={styles.formLabel}>
+                    {!this.state.validEmail?<Text style={{color:'#D21028',fontStyle:'italic'}}>{this.state.emailErrorMsg}</Text>:null}
+
+                    <Text style={[styles.formLabel, {marginTop:5}]}>
                         Password
                     </Text>
                     <TextInput
@@ -44,11 +98,10 @@ export default class LoginForm extends Component {
                 <View>
                     <TouchableOpacity
                         style={styles.formButton}
-                        onPress={() => {}}
+                        onPress={this._onSubmit.bind(this)}
+                        disabled={this.state.emailHasErrors}
                     >
-                        <Text
-                            style={styles.formButtonText}
-                        >
+                        <Text style={styles.formButtonText}>
                             Sign In
                         </Text>
                     </TouchableOpacity>
