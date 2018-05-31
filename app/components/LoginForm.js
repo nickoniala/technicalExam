@@ -6,7 +6,8 @@ import {
     Image, 
     TextInput,
     TouchableOpacity, 
-    KeyboardAvoidingView 
+    KeyboardAvoidingView,
+    Alert 
 } from 'react-native';
 
 export default class LoginForm extends Component {
@@ -14,9 +15,13 @@ export default class LoginForm extends Component {
         super(props);
         this.state = {
             email: '',
+            password: '',
             validEmail: true,
-            emailHasErrors: false,
+            validPassword: true,
+            emailHasError: false,
+            passwordHasError: false,
             emailErrorMsg: '',
+            passwordErrorMsg: ''
         };
     }
 
@@ -28,37 +33,80 @@ export default class LoginForm extends Component {
         if(email == '') {
             this.setState({
                 validEmail: false,
-                emailHasErrors: true,
+                emailHasError: true,
                 emailErrorMsg: 'email is required'
             });
         } else if(!reg.test(email)) {
             this.setState({
                 validEmail: false,
-                emailHasErrors: true,
+                emailHasError: true,
                 emailErrorMsg: 'not correct format for email address'
             });
         } else {
             this.setState({
                 validEmail: true,
-                emailHasErrors: false,
+                emailHasError: false,
                 emailErrorMsg: ''
             });
         }
     }
 
+    _checkPassword(password) {
+        this.setState({password});
+
+        if(password == '') {
+            this.setState({
+                validPassword: false,
+                passwordHasError: true,
+                passwordErrorMsg: 'password is required'
+            });
+        } else if(password.length < 6 || password.length > 12) {
+            this.setState({
+                validPassword: false,
+                passwordHasError: true,
+                passwordErrorMsg: 'please use at least 6 - 12 characters'
+            });
+        } else {
+            this.setState({
+                validPassword: true,
+                passwordHasError: false,
+                passwordErrorMsg: ''
+            });
+        }
+    }
+
     _onSubmit() {
-        if(this.state.email == '') {
+        if(this.state.email == '' && this.state.password == '') {
             this.setState({
                 validEmail: false,
-                emailHasErrors: true,
+                validPassword: false,
+                emailHasError: true,
+                passwordHasError: true,
+                emailErrorMsg: 'email is required',
+                passwordErrorMsg: 'password is required'
+            });
+        } else if(this.state.email == '') {
+            this.setState({
+                validEmail: false,
+                emailHasError: true,
                 emailErrorMsg: 'email is required'
+            });
+        } else if(this.state.password == '') {
+            this.setState({
+                validPassword: false,
+                passwordHasError: true,
+                passwordErrorMsg: 'password is required'
             });
         } else {
             this.setState({
                 validEmail: true,
-                emailHasErrors: false,
-                emailErrorMsg: ''
+                validPassword: true,
+                emailHasError: false,
+                passwordHasError: false,
+                emailErrorMsg: '',
+                passwordErrorMsg: ''
             });
+            Alert.alert('Login Success');
         }
     }
 
@@ -69,7 +117,7 @@ export default class LoginForm extends Component {
                     <Image source={require('../images/logo.png')} />
                 </View>
                 <View>
-                    <Text style={[styles.formLabel, {marginTop:5}]}>
+                    <Text style={styles.formLabel}>
                         Email
                     </Text>
                     <TextInput
@@ -80,26 +128,30 @@ export default class LoginForm extends Component {
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
                         autoCorrect={false}
+                        keyboardType='email-address'
                     />
                     {!this.state.validEmail?<Text style={{color:'#D21028',fontStyle:'italic'}}>{this.state.emailErrorMsg}</Text>:null}
 
-                    <Text style={[styles.formLabel, {marginTop:5}]}>
+                    <Text style={styles.formLabel}>
                         Password
                     </Text>
                     <TextInput
                         style={styles.formInput}
+                        onChangeText={this._checkPassword.bind(this)}
+                        value={this.state.password}
                         placeholder="Input password"
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
                         autoCorrect={false}
                         secureTextEntry
                     />
+                    {!this.state.validPassword?<Text style={{color:'#D21028',fontStyle:'italic'}}>{this.state.passwordErrorMsg}</Text>:null}
                 </View>
                 <View>
                     <TouchableOpacity
                         style={styles.formButton}
                         onPress={this._onSubmit.bind(this)}
-                        disabled={this.state.emailHasErrors}
+                        disabled={this.state.emailHasError || this.state.passwordHasError}
                     >
                         <Text style={styles.formButtonText}>
                             Sign In
