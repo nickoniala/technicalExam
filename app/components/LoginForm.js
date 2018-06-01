@@ -112,40 +112,44 @@ export default class LoginForm extends Component {
 
     render() {
         return (
-            <KeyboardAvoidingView style={{flex:1, justifyContent:'space-evenly'}} behavior="padding">
-                <View>
+            <KeyboardAvoidingView style={styles.formContainer} behavior="padding">
+                <View style={styles.formImage}>
                     <Image source={require('../images/logo.png')} />
                 </View>
                 <View>
-                    <Text style={styles.formLabel}>
-                        Email
-                    </Text>
-                    <TextInput
-                        style={styles.formInput}
-                        onChangeText={this._checkEmail.bind(this)}
-                        value={this.state.email}
-                        placeholder="Input email address"
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        keyboardType='email-address'
-                    />
-                    {!this.state.validEmail?<Text style={{color:'#D21028',fontStyle:'italic'}}>{this.state.emailErrorMsg}</Text>:null}
+                    <View style={styles.formGroup}>
+                        <Text style={styles.formLabel}>
+                            Email
+                        </Text>
+                        <TextInput
+                            style={styles.formInput}
+                            onChangeText={this._checkEmail.bind(this)}
+                            value={this.state.email}
+                            placeholder="Input email address"
+                            underlineColorAndroid="transparent"
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            keyboardType='email-address'
+                        />
+                        {!this.state.validEmail?<Text style={{color:'#D21028',fontStyle:'italic'}}>{this.state.emailErrorMsg}</Text>:null}
+                    </View>
 
-                    <Text style={styles.formLabel}>
-                        Password
-                    </Text>
-                    <TextInput
-                        style={styles.formInput}
-                        onChangeText={this._checkPassword.bind(this)}
-                        value={this.state.password}
-                        placeholder="Input password"
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        secureTextEntry
-                    />
-                    {!this.state.validPassword?<Text style={{color:'#D21028',fontStyle:'italic'}}>{this.state.passwordErrorMsg}</Text>:null}
+                    <View style={styles.formGroup}>
+                        <Text style={styles.formLabel}>
+                            Password
+                        </Text>
+                        <TextInput
+                            style={styles.formInput}
+                            onChangeText={this._checkPassword.bind(this)}
+                            value={this.state.password}
+                            placeholder="Input password"
+                            underlineColorAndroid="transparent"
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            secureTextEntry
+                        />
+                        {!this.state.validPassword?<Text style={{color:'#D21028',fontStyle:'italic'}}>{this.state.passwordErrorMsg}</Text>:null}
+                    </View>
                 </View>
                 <View>
                     <TouchableOpacity
@@ -164,6 +168,21 @@ export default class LoginForm extends Component {
 }
 
 const styles = StyleSheet.create({
+    formContainer: {
+        flex: 1, 
+        justifyContent: 'space-evenly', 
+        alignItems: 'stretch',
+        backgroundColor: '#FAF8FF',
+        // marginVertical: Expo.Constants.statusBarHeight,
+    },
+    formImage: {
+        alignSelf: 'center',
+        marginBottom: 10,
+    },
+    formGroup: {
+        marginBottom: 5,
+        marginHorizontal: 15,
+    },
     formLabel: {
         color: '#363636',
         fontWeight: 'bold',
@@ -178,7 +197,9 @@ const styles = StyleSheet.create({
     formButton: {
         backgroundColor: '#7D59C0',
         borderRadius: 5,
-        padding: 10,
+        padding: 15,
+        marginHorizontal: 15,
+        marginTop: 10,
         alignItems: 'center',
     },
     formButtonText: {
