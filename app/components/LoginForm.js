@@ -116,7 +116,7 @@ export default class LoginForm extends Component {
                 <View style={styles.formImage}>
                     <Image source={require('../images/logo.png')} />
                 </View>
-                <View>
+                <View style={{marginVertical:20}}>
                     <View style={styles.formGroup}>
                         <Text style={styles.formLabel}>
                             Email
@@ -151,7 +151,7 @@ export default class LoginForm extends Component {
                         {!this.state.validPassword?<Text style={{color:'#D21028',fontStyle:'italic'}}>{this.state.passwordErrorMsg}</Text>:null}
                     </View>
                 </View>
-                <View>
+                <View style={{marginTop:20}}>
                     <TouchableOpacity
                         style={styles.formButton}
                         onPress={this._onSubmit.bind(this)}
@@ -173,11 +173,10 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly', 
         alignItems: 'stretch',
         backgroundColor: '#FAF8FF',
-        // marginVertical: Expo.Constants.statusBarHeight,
     },
     formImage: {
         alignSelf: 'center',
-        marginBottom: 10,
+        marginBottom: 20,
     },
     formGroup: {
         marginBottom: 5,
@@ -199,7 +198,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 15,
         marginHorizontal: 15,
-        marginTop: 10,
         alignItems: 'center',
     },
     formButtonText: {
