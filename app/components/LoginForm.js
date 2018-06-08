@@ -7,7 +7,10 @@ import {
     TextInput,
     TouchableOpacity, 
     KeyboardAvoidingView,
-    Alert 
+    Alert,
+    Animated,
+    Keyboard,
+    Platform
 } from 'react-native';
 
 export default class LoginForm extends Component {
@@ -23,6 +26,32 @@ export default class LoginForm extends Component {
             emailErrorMsg: '',
             passwordErrorMsg: ''
         };
+        this.imageHeight = new Animated.Value(207);
+    }
+
+    componentWillMount() {
+        const keyboardPlatformOSShow = Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow';
+        const keyboardPlatformOSHide = Platform.OS === 'android' ? 'keyboardDidHide' : 'keyboardWillHide';
+
+        this.keyboardShow = Keyboard.addListener(keyboardPlatformOSShow, this._keyboardShow.bind(this));
+        this.keyboardHide = Keyboard.addListener(keyboardPlatformOSHide, this._keyboardHide.bind(this));
+    }
+
+    componentWillUnmount() {
+        this.keyboardShow.remove();
+        this.keyboardHide.remove();
+    }
+
+    _keyboardShow() {
+        Animated.timing(this.imageHeight, {
+            toValue: 100,
+        }).start();
+    };
+
+    _keyboardHide() {
+        Animated.timing(this.imageHeight, {
+            toValue: 207,
+        }).start();
     }
 
     _checkEmail(email) {
@@ -112,11 +141,11 @@ export default class LoginForm extends Component {
 
     render() {
         return (
-            <KeyboardAvoidingView style={styles.formContainer} behavior="padding">
+            <KeyboardAvoidingView style={styles.formContainer} behavior='padding'>
                 <View style={styles.formImage}>
-                    <Image source={require('../images/logo.png')} />
+                    <Animated.Image source={require('../images/logo.png')} style={{height: this.imageHeight}} resizeMode='contain' />
                 </View>
-                <View style={{marginVertical:20}}>
+                <View style={{marginVertical:15}}>
                     <View style={styles.formGroup}>
                         <Text style={styles.formLabel}>
                             Email
@@ -125,9 +154,9 @@ export default class LoginForm extends Component {
                             style={styles.formInput}
                             onChangeText={this._checkEmail.bind(this)}
                             value={this.state.email}
-                            placeholder="Input email address"
-                            underlineColorAndroid="transparent"
-                            autoCapitalize="none"
+                            placeholder='Input email address'
+                            underlineColorAndroid='transparent'
+                            autoCapitalize='none'
                             autoCorrect={false}
                             keyboardType='email-address'
                         />
@@ -142,16 +171,16 @@ export default class LoginForm extends Component {
                             style={styles.formInput}
                             onChangeText={this._checkPassword.bind(this)}
                             value={this.state.password}
-                            placeholder="Input password"
-                            underlineColorAndroid="transparent"
-                            autoCapitalize="none"
+                            placeholder='Input password'
+                            underlineColorAndroid='transparent'
+                            autoCapitalize='none'
                             autoCorrect={false}
                             secureTextEntry
                         />
                         {!this.state.validPassword?<Text style={{color:'#D21028',fontStyle:'italic'}}>{this.state.passwordErrorMsg}</Text>:null}
                     </View>
                 </View>
-                <View style={{marginTop:20}}>
+                <View style={{marginBottom:35}}>
                     <TouchableOpacity
                         style={styles.formButton}
                         onPress={this._onSubmit.bind(this)}
@@ -176,7 +205,8 @@ const styles = StyleSheet.create({
     },
     formImage: {
         alignSelf: 'center',
-        marginBottom: 20,
+        marginTop: 35,
+        //marginBottom: 20,
     },
     formGroup: {
         marginBottom: 5,
